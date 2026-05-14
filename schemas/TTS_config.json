@@ -1,0 +1,13 @@
+{
+  "logSequence": [
+    [
+      "asyncSpeak Prepare Speech",
+	   "stopSpeak|asyncSpeak Speech finished text"
+    ],
+    [
+      "trySpeakToTriggerDownloadPack",
+      "setup.tts.language.download.package",
+      "setup.tts.language.package.complete"
+    ]
+  ]
+}

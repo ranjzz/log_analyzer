@@ -1,0 +1,17 @@
+{
+  "logSequence": [
+    [
+      "[/multiview/multiview] scheduler open",   
+      "[multiview_video_controller] Successfully subscribed to Multi-View notifications",
+      "[multiview_video_controller] multiViewUIReady",
+      "stopspeak|asyncSpeak Speech finished text",
+      "scheduler open",
+      "[multiview_video_controller] Exiting Multiview2"
+    ],
+    [
+      "[/multiview/multiview] scheduler open",
+      "[multiview_video_controller] multiViewUIReady",
+      "[multiview_video_controller] Exiting Multiview2"
+    ]
+  ]
+}
