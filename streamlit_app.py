@@ -8,8 +8,6 @@ import time
 import subprocess
 from dateutil import parser
 from datetime import datetime
-import paramiko
-from paramiko.ssh_exception import AuthenticationException
 import sourcemap 
 import requests
 import itertools
@@ -245,118 +243,12 @@ for k, v in {
     "all_lines": [],
     "recursive_folder_target": "",
     "recursive_folder_requested": False,
-    "ssh_client": None,
-    "ssh_connected": False,
-    "ssh_available_dirs": [],
-    "server_js_files": [],
-    "last_build_time": 0,
     "current_detected_version": "Unknown",
-    "processing_engine": "Local Memory (Small Files)"
+    "processing_engine": "Local Memory (Small Files)",
+    "map_dir_path": r"U:\nvt\tpv_source\build\webui\dist\pages\settings_RDL"
 }.items():
     if k not in st.session_state:
         st.session_state[k] = v
-
-def translate_win_to_linux_aggressive(win_path):
-    clean = win_path.strip().replace('"', '').replace("'", "")
-    if clean.startswith("/"): return [clean]
-    if clean.lower().startswith("u:"):
-        path_part = clean[2:].replace("\\", "/")
-        return [f"/mnt/localdata/localhome/ux.team{path_part}", f"/mnt/u{path_part}", f"/u{path_part}", f"/home/{st.session_state.get('ssh_user', 'ux.team')}{path_part}"]
-    return [clean.replace("\\", "/")]
-
-def get_server_real_path(ip, user, pwd):
-    try:
-        client = paramiko.SSHClient()
-        client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        client.connect(ip, username=user, password=pwd, timeout=15)
-        cmd = 'echo "Current Path: $(pwd)"; echo "User Home: $HOME"; echo "Mounted Drives:"; df -h | grep -E "/mnt|/u"'
-        stdin, stdout, stderr = client.exec_command(cmd)
-        res = stdout.read().decode()
-        client.close()
-        return res
-    except Exception as e: return f"Error: {str(e)}"
-
-def generate_remote_source_maps(ip, user, pwd, root_dir, force_build=True):
-    try:
-        potential_paths = translate_win_to_linux_aggressive(root_dir)
-        client = paramiko.SSHClient()
-        client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        client.connect(ip, username=user, password=pwd, timeout=1800)
-        
-        paths_str = " ".join([f'"{p}"' for p in potential_paths])
-        find_root_cmd = f'''
-        for p in {paths_str}; do
-          curr="$p"
-          for i in 1 2 3 4 5 6 7 8; do
-            if [ -f "$curr/buildui.sh" ]; then echo "$curr"; exit 0; fi
-            curr=$(dirname "$curr")
-            [ "$curr" = "/" ] || [ "$curr" = "." ] && break
-          done
-        done
-        '''
-        stdin, stdout, stderr = client.exec_command(find_root_cmd)
-        project_root = stdout.read().decode().strip()
-
-        if not project_root:
-            client.close()
-            return None, "Error: buildui.sh not found."
-
-        log_output = [f"Project Root Detected: {project_root}"]
-        
-        map_source = f"{project_root}/tpv_source/build/webui/dist/pages"
-        map_dest = "/mnt/localdata/localhome/ux.team/nvt/tpv_source/build/webui/dist/pages/settings_RDL"
-
-        if force_build:
-            log_output.append("Ensuring sourceMap: true in build configuration...")
-            patch_cmd = f"""
-            sed -i 's/sourceMap: isDevMode/sourceMap: true/g' {project_root}/UI_source/bootstrap/config.utils.js || sed -i 's/sourceMap: isDev/sourceMap: true/g' {project_root}/UI_source/bootstrap/config.utils.js
-            sed -i "s/devtool: isDevMode && 'cheap-module-eval-source-map'/devtool: 'source-map'/g" {project_root}/UI_source/bootstrap/webpack.config.js
-            """
-            client.exec_command(patch_cmd)
-
-            log_output.append("Fixing environment and running build prod...")
-            build_full_cmd = f'''
-            export NVM_DIR="$HOME/.nvm"
-            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-            export PATH="$PATH:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
-            export NODE_OPTIONS=--openssl-legacy-provider
-            cd {project_root}
-            npx browserslist@latest --update-db
-            ./buildui.sh prod || true
-            '''
-            
-            stdin, stdout, stderr = client.exec_command(build_full_cmd)
-            stdout.read() 
-            
-            st.session_state.last_build_time = time.time()
-        else:
-            log_output.append("Skipping build, attempting to sync existing maps directly...")
-
-        sync_cmd = f"mkdir -p {map_dest} && cp {map_source}/*.map {map_dest}/ && sync {map_dest}"
-        client.exec_command(sync_cmd)
-
-        sftp = client.open_sftp()
-        try:
-            files = sftp.listdir(map_dest)
-            maps = [f for f in files if f.endswith('.map')]
-            if maps:
-                log_output.append(f"SUCCESS: {len(maps)} source maps synced.")
-                for mname in maps:
-                    with sftp.open(os.path.join(map_dest, mname), "r") as mf:
-                        content = mf.read().decode("utf-8", errors="ignore")
-                        js_name = mname.replace(".map", "")
-                        sw_ver = st.session_state.get('current_detected_version', 'Unknown')
-                        st.session_state.js_map_cache[f"{sw_ver}_{js_name}"] = content
-            else:
-                return None, "Error: Build finished but no .map files were found in target directory."
-        except Exception as e:
-            log_output.append(f"Verification check failed: {str(e)}")
-
-        sftp.close()
-        client.close()
-        return "\n".join(log_output), ""
-        
-    except Exception as e: return None, str(e)
 
 def set_jump_line(line_num):
     st.session_state.jump_line = line_num
@@ -369,7 +261,8 @@ def resolve_mapping(js_filename, gen_line, gen_col):
     map_content = st.session_state.js_map_cache.get(cache_key)
     
     if not map_content:
-        local_dir = r"U:\nvt\tpv_source\build\webui\dist\pages\settings_RDL"
+        # Mentor Fix: Directly use the path pasted in the sidebar
+        local_dir = st.session_state.get("map_dir_path", "")
         local_map_path = os.path.join(local_dir, js_base + ".map")
         
         if not os.path.exists(local_map_path) and os.path.isdir(local_dir):
@@ -387,7 +280,7 @@ def resolve_mapping(js_filename, gen_line, gen_col):
             except: pass
     
     if not map_content:
-        return {"error": f"❌ Map for {js_base} (SW: {sw_ver}) not found."}
+        return {"error": f"❌ Map for {js_base} not found in {st.session_state.get('map_dir_path')}."}
 
     try:
         index = sourcemap.load(io.StringIO(map_content))
@@ -1165,36 +1058,22 @@ def render_analysis(incs, stats, lines, version="Unknown", window_layers=None):
 with st.sidebar:
     st.title("🛡️ Forensic Sentinel")
 
-    with st.expander("🔑 Server Login & Map Gen", expanded=True):
-        ssh_ip   = st.text_input("Server IP", placeholder="192.168.x.x", key="ssh_ip")
-        ssh_user = st.text_input("Username", key="ssh_user_input")
-        ssh_pwd  = st.text_input("Password", type="password", key="ssh_pwd")
-
-        if st.button("🗺️ Find Server Path", key="btn_find_path"):
-            if ssh_ip and ssh_user and ssh_pwd:
-                with st.spinner("Analyzing server mounts..."):
-                    path_info = get_server_real_path(ssh_ip, ssh_user, ssh_pwd)
-                    st.info(path_info)
-            else: st.warning("Login first.")
-
-        manual_path = st.text_input(
-            "Project Path", 
-            value="U:\\nvt\\tpv_source\\build\\webui\\dist\\pages\\settings_RDL",
-            key="manual_path"
+    # MENTOR FIX: REPLACED SERVER LOGIN WITH SIMPLE MAP FOLDER PATH
+    with st.expander("🗺️ Source Map Configuration", expanded=True):
+        st.markdown("Specify the local or network folder path containing your `.map` files.")
+        
+        new_map_path = st.text_input(
+            "Map Directory Path", 
+            value=st.session_state.get("map_dir_path", r"U:\nvt\tpv_source\build\webui\dist\pages\settings_RDL"),
+            key="map_dir_path_input"
         )
-        force_build = st.checkbox("Force Rebuild Production", value=True, key="force_build")
-
-        if st.button("🚀 Sync Source Maps", key="btn_sync_maps"):
-            if ssh_ip and ssh_user and ssh_pwd and manual_path:
-                with st.spinner("Processing Server-Side Map Generation..."):
-                    out, err = generate_remote_source_maps(ssh_ip, ssh_user, ssh_pwd, manual_path, force_build=force_build)
-                    if out:
-                        st.toast("Maps Synced Successfully!", icon="✅")
-                        st.success("Maps Synced!")
-                        st.session_state.js_map_cache = {}
-                        with st.expander("Details"): st.text(out)
-                    else: st.error(f"Execution Error: {err}")
-            else: st.warning("Provide IP, User, Password, and Path.")
+        
+        if new_map_path != st.session_state.map_dir_path:
+            st.session_state.map_dir_path = new_map_path
+            
+        if st.button("↻ Clear Map Cache"):
+            st.session_state.js_map_cache = {}
+            st.success("Cache cleared! New map files will be read from the path above.")
 
     st.divider()
     
