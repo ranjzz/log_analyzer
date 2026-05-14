@@ -19,178 +19,182 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# CUSTOM STYLING - ADAPTIVE LIGHT & DARK THEME FIX
+# ULTRA-PREMIUM CUSTOM STYLING & FIXES
 st.markdown("""
     <style>
-    /* Adaptive Background & Typography */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+    
+    /* Global Typography & Background */
     .stApp {
         background-color: var(--background-color);
-        color: var(--text-color);
+        font-family: 'Inter', 'Segoe UI', sans-serif;
+    }
+    h1, h2, h3, h4 { 
+        font-family: 'Inter', sans-serif !important; 
+        font-weight: 800 !important; 
+        letter-spacing: -0.5px;
     }
     
-    /* Premium Sidebar Styling */
+    /* Sleek Sidebar Design */
     [data-testid="stSidebar"] {
         background-color: var(--secondary-background-color) !important;
-        border-right: 1px solid rgba(128, 128, 128, 0.2);
-        box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+        border-right: 1px solid rgba(128, 128, 128, 0.1);
+        box-shadow: 4px 0 24px rgba(0,0,0,0.03);
     }
     [data-testid="stSidebar"] hr {
-        margin: 1.5em 0;
-        border-top: 1px dashed rgba(128, 128, 128, 0.3);
-    }
-    
-    /* Typography Overrides */
-    h1, h2, h3, h4 { 
-        color: var(--text-color) !important; 
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-        font-weight: 800 !important; 
-    }
-    .stMarkdown p, .stText, label { 
-        color: var(--text-color) !important; 
-        font-weight: 600 !important; 
+        border-top: 1px solid rgba(128, 128, 128, 0.2);
+        margin: 2em 0;
     }
 
-    /* Radio Buttons Visibility Fix */
-    .stRadio > label > div > p {
-        color: var(--primary-color) !important; 
-        font-weight: 800 !important;
-        font-size: 16px !important;
+    /* VISIBILITY FIX: Premium Text Inputs */
+    .stTextInput input, .stNumberInput input {
+        background-color: rgba(128, 128, 128, 0.05) !important;
+        color: var(--text-color) !important; /* Ensures pasted path is always visible! */
+        border: 1.5px solid rgba(128, 128, 128, 0.2) !important;
+        border-radius: 10px !important;
+        padding: 0.75rem 1rem !important;
+        font-weight: 500 !important;
+        font-size: 15px !important;
+        box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+        transition: all 0.3s ease;
     }
-    div[role="radiogroup"] label > div:first-of-type p {
-        color: var(--text-color) !important;
-        font-weight: 700 !important;
+    .stTextInput input:focus, .stNumberInput input:focus {
+        border-color: #3B82F6 !important;
+        box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15) !important;
+        background-color: transparent !important;
     }
 
-    /* Adaptive Metrics Boxes */
+    /* Stunning Gradient Buttons */
+    div.stButton > button:first-child {
+        background: linear-gradient(135deg, #2563EB 0%, #3B82F6 100%) !important;
+        color: #FFFFFF !important;
+        border-radius: 10px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        border: none;
+        padding: 0.6rem 1.5rem;
+        box-shadow: 0 4px 14px 0 rgba(37, 99, 235, 0.39);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    div.stButton > button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(37, 99, 235, 0.5);
+        filter: brightness(1.1);
+    }
+    div.stButton > button:active {
+        transform: translateY(1px);
+        box-shadow: 0 2px 8px rgba(37, 99, 235, 0.4);
+    }
+
+    /* Elevated Metric Cards */
     [data-testid="stMetric"] {
         background: var(--secondary-background-color);
-        padding: 15px 20px;
-        border-radius: 12px;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        border: 1px solid rgba(128, 128, 128, 0.2);
-        border-top: 4px solid var(--primary-color);
+        padding: 20px;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+        border: 1px solid rgba(128, 128, 128, 0.1);
+        border-left: 5px solid #3B82F6;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    [data-testid="stMetric"]:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
     }
     [data-testid="stMetricValue"] { 
-        color: var(--primary-color) !important; 
+        color: #3B82F6 !important; 
         font-weight: 900 !important; 
+        font-size: 28px !important;
     }
     [data-testid="stMetricLabel"] { 
         color: var(--text-color) !important; 
-        font-weight: bold !important; 
+        font-weight: 700 !important; 
         text-transform: uppercase; 
-        opacity: 0.8;
+        letter-spacing: 0.5px;
+        opacity: 0.7;
     }
 
-    /* Modern Blue Buttons */
-    div.stButton > button:first-child {
-        background: var(--primary-color);
-        color: white !important;
-        border-radius: 8px;
-        font-weight: bold;
-        border: none;
-        padding: 0.5rem 1rem;
-        transition: all 0.3s ease;
-    }
-    div.stButton > button:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        filter: brightness(1.1);
-    }
-
-    /* Tabs Styling */
+    /* Premium Tabs */
     .stTabs [data-baseweb="tab-list"] { 
         background-color: var(--secondary-background-color); 
-        padding: 5px; 
-        border-radius: 10px; 
+        padding: 6px; 
+        border-radius: 12px; 
+        box-shadow: 0 2px 10px rgba(0,0,0,0.02);
     }
     .stTabs [data-baseweb="tab"] { 
         color: var(--text-color); 
-        font-weight: bold; 
-        opacity: 0.7;
+        font-weight: 600; 
+        padding: 10px 20px;
+        transition: all 0.2s ease;
     }
     .stTabs [aria-selected="true"] { 
         background-color: var(--background-color) !important;
-        color: var(--primary-color) !important; 
-        border-radius: 7px !important;
-        opacity: 1;
+        color: #3B82F6 !important; 
+        font-weight: 800;
+        border-radius: 8px !important;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
     }
 
-    /* Expander Styling */
+    /* Soft Expander Styling */
     [data-testid="stExpander"] details summary {
         background-color: var(--secondary-background-color) !important;
-        border-radius: 8px !important;
-        border: 1px solid rgba(128, 128, 128, 0.2) !important;
-        color: var(--text-color) !important;
+        border-radius: 10px !important;
+        border: 1px solid rgba(128, 128, 128, 0.15) !important;
+        padding: 12px 15px !important;
+        transition: all 0.2s ease;
+    }
+    [data-testid="stExpander"] details summary:hover {
+        background-color: rgba(128, 128, 128, 0.08) !important;
     }
     [data-testid="stExpander"] details summary p {
-        color: var(--text-color) !important;
         font-weight: 700 !important;
+        color: var(--text-color) !important;
     }
 
-    /* ULTIMATE FIX: File Uploader */
-    [data-testid="stFileUploader"] {
-        background-color: var(--secondary-background-color) !important;
-        border-radius: 12px !important;
-        padding: 15px !important;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.05) !important;
-    }
+    /* Beautiful File Upload Dropzone */
     [data-testid="stFileUploadDropzone"] {
-        background-color: rgba(128, 128, 128, 0.05) !important;
-        border: 2px dashed var(--primary-color) !important;
-        color: var(--text-color) !important;
-        border-radius: 10px !important;
+        background-color: rgba(59, 130, 246, 0.03) !important;
+        border: 2px dashed #3B82F6 !important;
+        border-radius: 14px !important;
+        padding: 2rem !important;
+        transition: all 0.3s ease;
     }
-    [data-testid="stFileUploadDropzone"] span, 
-    [data-testid="stFileUploadDropzone"] small {
-        color: var(--text-color) !important;
-        font-weight: 700 !important;
-    }
-    [data-testid="stFileUploadDropzone"] button {
-        background-color: var(--primary-color) !important;
-        color: white !important;
-        border-radius: 6px !important;
+    [data-testid="stFileUploadDropzone"]:hover {
+        background-color: rgba(59, 130, 246, 0.08) !important;
+        border-color: #2563EB !important;
     }
 
-    /* Log Boxes for Adaptive Theme */
+    /* Enhanced Color-Coded Log Boxes */
     .log-box {
         padding: 1.2rem;
-        font-family: 'Courier New', monospace;
+        font-family: 'Courier New', Courier, monospace;
         white-space: pre-wrap;
         font-size: 13.5px;
-        border-radius: 6px;
+        border-radius: 8px;
         margin: 12px 0;
         border-left: 6px solid;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
         background-color: var(--secondary-background-color);
         color: var(--text-color);
+        line-height: 1.5;
     }
-    /* Keep border colors for severity, but let background adapt natively */
-    .log-crash { border-color: #EF4444; }
-    .log-error { border-color: #F97316; }
-    .log-warn  { border-color: #EAB308; }
-    .log-info  { border-color: #22C55E; }
-    .log-rpc   { border-color: #8B5CF6; }
-    .log-layer { border-color: #EC4899; }
+    .log-crash { border-color: #EF4444; background: rgba(239, 68, 68, 0.05); }
+    .log-error { border-color: #F97316; background: rgba(249, 115, 22, 0.05); }
+    .log-warn  { border-color: #EAB308; background: rgba(234, 179, 8, 0.05); }
+    .log-info  { border-color: #22C55E; background: rgba(34, 197, 94, 0.05); }
+    .log-rpc   { border-color: #8B5CF6; background: rgba(139, 92, 246, 0.05); }
+    .log-layer { border-color: #EC4899; background: rgba(236, 72, 153, 0.05); }
     
-    /* Input Box Styles */
-    .stTextInput input, .stNumberInput input {
-        background-color: var(--background-color) !important;
-        color: var(--text-color) !important;
-        border: 1px solid rgba(128, 128, 128, 0.3) !important;
-        border-radius: 8px !important;
-    }
-
     /* Section Headers */
     .section-header {
         font-weight: 800;
         color: var(--text-color);
         margin-top: 15px;
         text-transform: uppercase;
-        font-size: 13px;
-        letter-spacing: 0.5px;
-        border-bottom: 1px solid rgba(128, 128, 128, 0.3);
-        padding-bottom: 5px;
-        margin-bottom: 10px;
+        font-size: 12px;
+        letter-spacing: 1px;
+        border-bottom: 2px solid rgba(128, 128, 128, 0.1);
+        padding-bottom: 6px;
+        margin-bottom: 12px;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -215,7 +219,6 @@ TS_PAT   = re.compile(
 STACK_CONTINUE_PAT = re.compile(r"^\s+(at\s+|anonymous|Call|stack|at\s*\(|-->|#\d+)", re.I)
 ON_SHOW_PAT     = re.compile(r"\[onShow\]", re.I)
 
-# UPGRADED VERSION REGEX (Captures TPN, standalone IP-like versions, and R. versions aggressively)
 VERSION_PAT = re.compile(r"(TPN\d{2,}[A-Za-z0-9_.\-]+)|\b(R\.\d{1,3}\.[\d\.]+)\b|(?:Software|SW\s*ware|SW|UI|Build|Firmware)\s*(?:version|v)?\s*[:=]\s*([A-Za-z0-9_]+\.[\w\d\.\-]+)|(\b\d{3}\.\d{3}\.\d{3}\.\d{3}\b)", re.I)
 JS_STACK_PAT = re.compile(r"([\w\.-]+\.js):(\d+):(\d+)", re.I)
 
@@ -235,6 +238,7 @@ for k, v in {
     "json_log_name": "",
     "active_incidents": [],
     "js_map_cache": {},
+    "manual_map_path": "",
     "selected_js_files": [],
     "window_layers": [],
     "rpc_delay_threshold": 1.0,
@@ -243,12 +247,42 @@ for k, v in {
     "all_lines": [],
     "recursive_folder_target": "",
     "recursive_folder_requested": False,
+    "last_build_time": 0,
     "current_detected_version": "Unknown",
-    "processing_engine": "Local Memory (Small Files)",
-    "map_dir_path": r"U:\nvt\tpv_source\build\webui\dist\pages\settings_RDL"
+    "processing_engine": "Local Memory (Small Files)"
 }.items():
     if k not in st.session_state:
         st.session_state[k] = v
+
+def load_local_source_maps(map_dir):
+    # Auto-correct if the user pasted a direct file path instead of a directory
+    if os.path.isfile(map_dir) and map_dir.lower().endswith('.map'):
+        map_dir = os.path.dirname(map_dir)
+        
+    log_output = [f"Scanning directory: {map_dir}"]
+    try:
+        if not os.path.exists(map_dir) or not os.path.isdir(map_dir):
+            return None, f"Error: Directory '{map_dir}' does not exist."
+        
+        maps = [f for f in os.listdir(map_dir) if f.endswith('.map')]
+        if maps:
+            log_output.append(f"SUCCESS: {len(maps)} source maps found.")
+            for mname in maps:
+                mpath = os.path.join(map_dir, mname)
+                try:
+                    with open(mpath, "r", encoding="utf-8-sig", errors="ignore") as mf:
+                        content = mf.read()
+                        js_name = mname.replace(".map", "")
+                        sw_ver = st.session_state.get('current_detected_version', 'Unknown')
+                        st.session_state.js_map_cache[f"{sw_ver}_{js_name}"] = content
+                        st.session_state.js_map_cache[js_name] = content # Fallback without version tag
+                except Exception as file_e:
+                    log_output.append(f"Warning: Could not read {mname}: {str(file_e)}")
+            return "\n".join(log_output), ""
+        else:
+            return None, f"Error: No .map files found in '{map_dir}'."
+    except Exception as e:
+        return None, str(e)
 
 def set_jump_line(line_num):
     st.session_state.jump_line = line_num
@@ -260,9 +294,13 @@ def resolve_mapping(js_filename, gen_line, gen_col):
     cache_key = f"{sw_ver}_{js_base}"
     map_content = st.session_state.js_map_cache.get(cache_key)
     
+    # Check fallback map cache without SW version
     if not map_content:
-        # Mentor Fix: Directly use the path pasted in the sidebar
-        local_dir = st.session_state.get("map_dir_path", "")
+        map_content = st.session_state.js_map_cache.get(js_base)
+    
+    # Try finding the map in the specified manual map path
+    if not map_content:
+        local_dir = st.session_state.get("manual_map_path", "")
         local_map_path = os.path.join(local_dir, js_base + ".map")
         
         if not os.path.exists(local_map_path) and os.path.isdir(local_dir):
@@ -277,10 +315,11 @@ def resolve_mapping(js_filename, gen_line, gen_col):
                 with open(local_map_path, "r", encoding="utf-8-sig") as f:
                     map_content = f.read()
                     st.session_state.js_map_cache[cache_key] = map_content
+                    st.session_state.js_map_cache[js_base] = map_content
             except: pass
     
     if not map_content:
-        return {"error": f"❌ Map for {js_base} not found in {st.session_state.get('map_dir_path')}."}
+        return {"error": f"❌ Map for {js_base} not found."}
 
     try:
         index = sourcemap.load(io.StringIO(map_content))
@@ -1058,22 +1097,24 @@ def render_analysis(incs, stats, lines, version="Unknown", window_layers=None):
 with st.sidebar:
     st.title("🛡️ Forensic Sentinel")
 
-    # MENTOR FIX: REPLACED SERVER LOGIN WITH SIMPLE MAP FOLDER PATH
-    with st.expander("🗺️ Source Map Configuration", expanded=True):
-        st.markdown("Specify the local or network folder path containing your `.map` files.")
-        
-        new_map_path = st.text_input(
-            "Map Directory Path", 
-            value=st.session_state.get("map_dir_path", r"U:\nvt\tpv_source\build\webui\dist\pages\settings_RDL"),
-            key="map_dir_path_input"
+    with st.expander("🗺️ Local Source Map Sync", expanded=True):
+        manual_path = st.text_input(
+            "Local Map Directory Path", 
+            value=r"C:\path\to\your\source_maps",
+            key="manual_path"
         )
-        
-        if new_map_path != st.session_state.map_dir_path:
-            st.session_state.map_dir_path = new_map_path
-            
-        if st.button("↻ Clear Map Cache"):
-            st.session_state.js_map_cache = {}
-            st.success("Cache cleared! New map files will be read from the path above.")
+        st.session_state.manual_map_path = manual_path
+
+        if st.button("🚀 Sync Source Maps", key="btn_sync_maps"):
+            if manual_path:
+                with st.spinner("Loading local Source Maps..."):
+                    out, err = load_local_source_maps(manual_path)
+                    if out:
+                        st.toast("Maps Synced Successfully!", icon="✅")
+                        st.success("Maps Synced!")
+                        with st.expander("Details"): st.text(out)
+                    else: st.error(f"Execution Error: {err}")
+            else: st.warning("Provide a valid directory path.")
 
     st.divider()
     
