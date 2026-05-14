@@ -21,70 +21,71 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# CUSTOM STYLING - MODERN LIGHT THEME (HIGH CONTRAST & PREMIUM SIDEBAR)
+# CUSTOM STYLING - ADAPTIVE LIGHT & DARK THEME FIX
 st.markdown("""
     <style>
-    /* Professional Light Background */
+    /* Adaptive Background & Typography */
     .stApp {
-        background-color: #F1F5F9;
-        color: #1E293B;
+        background-color: var(--background-color);
+        color: var(--text-color);
     }
     
     /* Premium Sidebar Styling */
     [data-testid="stSidebar"] {
-        background-color: #FFFFFF !important;
-        border-right: 1px solid #E2E8F0;
-        box-shadow: 2px 0 10px rgba(0,0,0,0.02);
+        background-color: var(--secondary-background-color) !important;
+        border-right: 1px solid rgba(128, 128, 128, 0.2);
+        box-shadow: 2px 0 10px rgba(0,0,0,0.05);
     }
     [data-testid="stSidebar"] hr {
         margin: 1.5em 0;
-        border-top: 1px dashed #CBD5E1;
+        border-top: 1px dashed rgba(128, 128, 128, 0.3);
     }
     
-    /* Typography Overrides - Dark Text on Light BG */
+    /* Typography Overrides */
     h1, h2, h3, h4 { 
-        color: #0F172A !important; 
+        color: var(--text-color) !important; 
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
         font-weight: 800 !important; 
     }
     .stMarkdown p, .stText, label { 
-        color: #334155 !important; 
+        color: var(--text-color) !important; 
         font-weight: 600 !important; 
     }
 
-    /* Radio Buttons Visibility Fix & Sidebar Card styling */
+    /* Radio Buttons Visibility Fix */
     .stRadio > label > div > p {
-        color: #2563EB !important; 
+        color: var(--primary-color) !important; 
         font-weight: 800 !important;
-        font-size: 15px !important;
+        font-size: 16px !important;
     }
     div[role="radiogroup"] label > div:first-of-type p {
-        color: #1E293B !important;
+        color: var(--text-color) !important;
         font-weight: 700 !important;
     }
 
-    /* Light Metrics Boxes */
+    /* Adaptive Metrics Boxes */
     [data-testid="stMetric"] {
-        background: #FFFFFF;
+        background: var(--secondary-background-color);
         padding: 15px 20px;
         border-radius: 12px;
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        border: 1px solid #E2E8F0;
-        border-top: 4px solid #2563EB;
+        border: 1px solid rgba(128, 128, 128, 0.2);
+        border-top: 4px solid var(--primary-color);
     }
     [data-testid="stMetricValue"] { 
-        color: #2563EB !important; 
+        color: var(--primary-color) !important; 
         font-weight: 900 !important; 
     }
     [data-testid="stMetricLabel"] { 
-        color: #64748B !important; 
+        color: var(--text-color) !important; 
         font-weight: bold !important; 
         text-transform: uppercase; 
+        opacity: 0.8;
     }
 
     /* Modern Blue Buttons */
     div.stButton > button:first-child {
-        background: #2563EB;
+        background: var(--primary-color);
         color: white !important;
         border-radius: 8px;
         font-weight: bold;
@@ -93,67 +94,66 @@ st.markdown("""
         transition: all 0.3s ease;
     }
     div.stButton > button:hover {
-        background: #1D4ED8;
         transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        filter: brightness(1.1);
     }
 
     /* Tabs Styling */
     .stTabs [data-baseweb="tab-list"] { 
-        background-color: #E2E8F0; 
+        background-color: var(--secondary-background-color); 
         padding: 5px; 
         border-radius: 10px; 
     }
     .stTabs [data-baseweb="tab"] { 
-        color: #475569; 
+        color: var(--text-color); 
         font-weight: bold; 
+        opacity: 0.7;
     }
     .stTabs [aria-selected="true"] { 
-        background-color: #FFFFFF !important;
-        color: #2563EB !important; 
+        background-color: var(--background-color) !important;
+        color: var(--primary-color) !important; 
         border-radius: 7px !important;
+        opacity: 1;
     }
 
     /* Expander Styling */
     [data-testid="stExpander"] details summary {
-        background-color: #F8FAFC !important;
+        background-color: var(--secondary-background-color) !important;
         border-radius: 8px !important;
-        border: 1px solid #E2E8F0 !important;
-        color: #0F172A !important;
+        border: 1px solid rgba(128, 128, 128, 0.2) !important;
+        color: var(--text-color) !important;
     }
     [data-testid="stExpander"] details summary p {
-        color: #0F172A !important;
+        color: var(--text-color) !important;
         font-weight: 700 !important;
     }
 
-    /* File Uploader */
+    /* ULTIMATE FIX: File Uploader */
     [data-testid="stFileUploader"] {
-        background-color: #FFFFFF !important;
+        background-color: var(--secondary-background-color) !important;
         border-radius: 12px !important;
         padding: 15px !important;
         box-shadow: 0 2px 10px rgba(0,0,0,0.05) !important;
     }
     [data-testid="stFileUploadDropzone"] {
-        background-color: #F0F7FF !important;
-        border: 2px dashed #3B82F6 !important;
-        color: #1E40AF !important;
+        background-color: rgba(128, 128, 128, 0.05) !important;
+        border: 2px dashed var(--primary-color) !important;
+        color: var(--text-color) !important;
         border-radius: 10px !important;
     }
-    [data-testid="stFileUploadDropzone"] span {
-        color: #1E40AF !important;
+    [data-testid="stFileUploadDropzone"] span, 
+    [data-testid="stFileUploadDropzone"] small {
+        color: var(--text-color) !important;
         font-weight: 700 !important;
     }
-    [data-testid="stFileUploadDropzone"] small {
-        color: #2563EB !important;
-        font-weight: 600 !important;
-    }
     [data-testid="stFileUploadDropzone"] button {
-        background-color: #2563EB !important;
+        background-color: var(--primary-color) !important;
         color: white !important;
         border-radius: 6px !important;
     }
 
-    /* Log Boxes for Light Theme */
+    /* Log Boxes for Adaptive Theme */
     .log-box {
         padding: 1.2rem;
         font-family: 'Courier New', monospace;
@@ -163,44 +163,36 @@ st.markdown("""
         margin: 12px 0;
         border-left: 6px solid;
         box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        background-color: var(--secondary-background-color);
+        color: var(--text-color);
     }
-    .log-crash { background-color: #FEF2F2; color: #991B1B; border-color: #EF4444; }
-    .log-error { background-color: #FFF7ED; color: #9A3412; border-color: #F97316; }
-    .log-warn  { background-color: #FEFCE8; color: #854D0E; border-color: #EAB308; }
-    .log-info  { background-color: #F0FDF4; color: #166534; border-color: #22C55E; }
-    .log-rpc   { background-color: #F5F3FF; color: #5B21B6; border-color: #8B5CF6; }
-    .log-layer { background-color: #FDF2F8; color: #9D174D; border-color: #EC4899; }
+    /* Keep border colors for severity, but let background adapt natively */
+    .log-crash { border-color: #EF4444; }
+    .log-error { border-color: #F97316; }
+    .log-warn  { border-color: #EAB308; }
+    .log-info  { border-color: #22C55E; }
+    .log-rpc   { border-color: #8B5CF6; }
+    .log-layer { border-color: #EC4899; }
     
     /* Input Box Styles */
     .stTextInput input, .stNumberInput input {
-        background-color: #FFFFFF !important;
-        color: #0F172A !important;
-        border: 1px solid #CBD5E1 !important;
+        background-color: var(--background-color) !important;
+        color: var(--text-color) !important;
+        border: 1px solid rgba(128, 128, 128, 0.3) !important;
         border-radius: 8px !important;
     }
 
     /* Section Headers */
     .section-header {
         font-weight: 800;
-        color: #1E293B;
+        color: var(--text-color);
         margin-top: 15px;
         text-transform: uppercase;
         font-size: 13px;
         letter-spacing: 0.5px;
-        border-bottom: 1px solid #E2E8F0;
+        border-bottom: 1px solid rgba(128, 128, 128, 0.3);
         padding-bottom: 5px;
         margin-bottom: 10px;
-    }
-    
-    /* Custom Sidebar Headers */
-    .sidebar-header {
-        color: #0F172A;
-        font-size: 15px;
-        font-weight: 800;
-        margin-top: 10px;
-        margin-bottom: 10px;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -434,14 +426,14 @@ def file_browser_ui(key_suffix: str, is_recursive: bool = False):
     hist_key = "std_folder_history" if key_suffix == "std" else "json_folder_history"
     
     sources = ["Folder Path", "Manual File Browse"] if is_recursive else ["Manual File Browse", "Folder Path"]
-    mode = st.selectbox("Input Strategy", sources, key=f"mode_{key_suffix}")
+    mode = st.selectbox("Input Mode", sources, key=f"mode_{key_suffix}")
     content, name, file_path, folder_target = None, "", None, None
 
     if mode == "Manual File Browse":
         if st.session_state.processing_engine == "FastAPI (Large file)":
             colA, colB = st.columns(2)
             with colA:
-                if st.button("📂 Pick Massive File", key=f"tk_btn_{key_suffix}"):
+                if st.button("📂 Browse File (Instant)", key=f"tk_btn_{key_suffix}"):
                     import tkinter as tk
                     from tkinter import filedialog
                     try:
@@ -452,12 +444,12 @@ def file_browser_ui(key_suffix: str, is_recursive: bool = False):
                         root.destroy()
                         if f_path:
                             st.session_state[f"tk_path_{key_suffix}"] = f_path
-                            st.toast(f"Ready: {f_path}", icon="📂")
+                            st.toast(f"✅ Ready: {f_path}", icon="📂")
                     except Exception as e:
-                        st.error(f"Error: {e}")
+                        st.error(f"Error opening native browser: {e}")
             with colB:
                 if is_recursive:
-                    if st.button("📂 Pick Deep Folder", key=f"tk_btn_dir_{key_suffix}"):
+                    if st.button("📂 Browse Folder (Deep Scan)", key=f"tk_btn_dir_{key_suffix}"):
                         import tkinter as tk
                         from tkinter import filedialog
                         try:
@@ -468,9 +460,9 @@ def file_browser_ui(key_suffix: str, is_recursive: bool = False):
                             root.destroy()
                             if d_path:
                                 st.session_state[f"tk_path_{key_suffix}"] = d_path
-                                st.toast(f"Folder Ready: {d_path}", icon="📂")
+                                st.toast(f"✅ Folder Ready: {d_path}", icon="📂")
                         except Exception as e:
-                            st.error(f"Error: {e}")
+                            st.error(f"Error opening native folder browser: {e}")
                             
             if st.session_state.get(f"tk_path_{key_suffix}"):
                 sel_path = st.session_state[f"tk_path_{key_suffix}"]
@@ -480,9 +472,9 @@ def file_browser_ui(key_suffix: str, is_recursive: bool = False):
                     file_path = sel_path
                     
         else:
-            uploaded = st.file_uploader("Upload Target Files", type=['txt','log','zip'], accept_multiple_files=True, key=f"up_{key_suffix}", label_visibility="collapsed")
+            uploaded = st.file_uploader("Upload Log(s) or ZIP File", type=['txt','log','zip'], accept_multiple_files=True, key=f"up_{key_suffix}")
             if uploaded:
-                st.toast("Files uploaded to memory!", icon="✅")
+                st.toast("Logs successfully uploaded!", icon="✅")
                 if len(uploaded) == 1:
                     name = uploaded[0].name
                     content = uploaded[0].getvalue()
@@ -492,15 +484,15 @@ def file_browser_ui(key_suffix: str, is_recursive: bool = False):
                     st.session_state.pop("active_content", None)
     else: 
         if st.session_state[hist_key]:
-            sel = st.selectbox("History", ["-- Select Recent --"] + st.session_state[hist_key][::-1], key=f"hist_{key_suffix}")
-            if sel != "-- Select Recent --":
+            sel = st.selectbox("Recent Folders", ["-- recent --"] + st.session_state[hist_key][::-1], key=f"hist_{key_suffix}")
+            if sel != "-- recent --":
                 st.session_state.current_path = sel
                 st.rerun()
 
         c_pick, c_path = st.columns([1, 4])
         with c_pick:
             st.write("") 
-            if st.button("📂 Native", key=f"tk_dir_{key_suffix}", use_container_width=True):
+            if st.button("📂 Pick Folder", key=f"tk_dir_{key_suffix}", use_container_width=True):
                 import tkinter as tk
                 from tkinter import filedialog
                 try:
@@ -515,17 +507,17 @@ def file_browser_ui(key_suffix: str, is_recursive: bool = False):
                 except Exception as e:
                     pass
         with c_path:
-            path = st.text_input("Active Path", st.session_state.current_path, key=f"path_{key_suffix}", label_visibility="collapsed")
+            path = st.text_input("Directory Path", st.session_state.current_path, key=f"path_{key_suffix}")
 
         c1, c2, c3 = st.columns([1,1,2])
         
-        if c1.button("🏠", key=f"home_{key_suffix}", use_container_width=True):
+        if c1.button("🏠 Home", key=f"home_{key_suffix}", use_container_width=True):
             st.session_state.current_path = st.session_state.root_path
             st.rerun()
-        if c2.button("⬅", key=f"back_{key_suffix}", use_container_width=True):
+        if c2.button("⬅ Back", key=f"back_{key_suffix}", use_container_width=True):
             st.session_state.current_path = os.path.dirname(st.session_state.current_path)
             st.rerun()
-        if c3.button("↻ Sync Explorer", key=f"sync_{key_suffix}", use_container_width=True):
+        if c3.button("↻ Sync", key=f"sync_{key_suffix}", use_container_width=True):
             st.session_state.current_path = path
             st.rerun()
 
@@ -536,8 +528,8 @@ def file_browser_ui(key_suffix: str, is_recursive: bool = False):
             files   = sorted(f for f in items if f.lower().endswith(('.log','.txt')))
             
             if folders:
-                sub = st.selectbox("Sub-directories", ["-- Expand --"] + folders, key=f"sub_{key_suffix}")
-                if sub != "-- Expand --":
+                sub = st.selectbox("Subfolders", ["-- Browse --"] + folders, key=f"sub_{key_suffix}")
+                if sub != "-- Browse --":
                     st.session_state.current_path = os.path.join(curr, sub)
                     st.rerun()
             
@@ -545,8 +537,8 @@ def file_browser_ui(key_suffix: str, is_recursive: bool = False):
                 folder_target = curr
             else:
                 if files:
-                    fsel = st.selectbox("Target Log", ["-- Select File --"] + files, key=f"file_{key_suffix}")
-                    if fsel != "-- Select File --":
+                    fsel = st.selectbox("Log files", ["-- Select --"] + files, key=f"file_{key_suffix}")
+                    if fsel != "-- Select --":
                         name = fsel
                         file_path = os.path.join(curr, fsel)
                         if st.session_state.processing_engine == "Local Memory (Small Files)":
@@ -584,7 +576,7 @@ def analyze_folder_recursive(folder_path: str, config=None):
     progress = st.progress(0, text=f"Deep Recursive scan: 0/{len(files)} files")
     for idx, fp in enumerate(files, start=1):
         if st.session_state.processing_engine == "FastAPI (Large file)":
-            fastapi_url = st.session_state.get("fastapi_url", "https://ranjjjiiiithaaaaa-24-log-analyzer.hf.space")
+            fastapi_url = st.session_state.get("fastapi_url", "http://localhost:8000")
             try:
                 payload = {"file_path": fp, "rpc_delay_threshold": float(st.session_state.rpc_delay_threshold), "config": config}
                 response = requests.post(f"{fastapi_url}/analyze_large_file", json=payload)
@@ -1097,6 +1089,7 @@ def render_analysis(incs, stats, lines, version="Unknown", window_layers=None):
             raw_text = lines[idx].replace("<","&lt;").replace(">","&gt;")
             html_lines.append(f'<div id="L{ln}" class="{cls}"><span class="line-number">{ln}</span><span class="log-content">{raw_text}</span></div>')
         
+        # LOG VIEWER FIX: Added @media dark theme query directly into the iframe so the custom logs auto-invert!
         st.components.v1.html(f"""
             <style>
             body {{ margin: 0; padding: 0; background: #F8FAFC; color: #1E293B; }}
@@ -1140,6 +1133,20 @@ def render_analysis(incs, stats, lines, version="Unknown", window_layers=None):
             ::-webkit-scrollbar-track {{ background: #F8FAFC; }}
             ::-webkit-scrollbar-thumb {{ background: #CBD5E1; border-radius: 4px; }}
             ::-webkit-scrollbar-thumb:hover {{ background: #94A3B8; }}
+
+            /* THIS HANDLES THE DARK THEME LOGIC FOR THE IFRAME */
+            @media (prefers-color-scheme: dark) {{
+                body {{ background: #0E1117; color: #FAFAFA; }}
+                .log-line {{ border-bottom: 1px solid #262730; }}
+                .line-number {{ color: #6b7280; border-right: 1px solid #262730; }}
+                .log-content {{ color: #FAFAFA !important; }}
+                .jump-target {{ background-color: #422006 !important; border-left: 6px solid #EAB308 !important; }}
+                .jump-target .log-content {{ color: #FDE047 !important; font-weight: bold; }}
+                ::-webkit-scrollbar-track {{ background: #0E1117; }}
+                ::-webkit-scrollbar-thumb {{ background: #4B5563; }}
+                ::-webkit-scrollbar-thumb:hover {{ background: #6B7280; }}
+                #scroll-container {{ border: 1px solid #262730 !important; }}
+            }}
             </style>
             <div id="scroll-container" class="log-viewer-container" style="height:600px; overflow:auto; border:1px solid #CBD5E1; border-radius: 8px;">
                 {"".join(html_lines)}
@@ -1151,17 +1158,14 @@ def render_analysis(incs, stats, lines, version="Unknown", window_layers=None):
                 }}
             </script>
         """, height=620)
+    else:
+        st.info("No logs loaded for viewer. Note: Deep Recursive mode disables log viewer memory to protect RAM.")
 
-# --- REORGANIZED & PREMIUM SIDEBAR ---
+# --- SIDEBAR (3 TOP LEVEL MODES) ---
 with st.sidebar:
-    st.markdown("""
-        <div style="text-align: center; margin-bottom: 25px; margin-top: -20px;">
-            <h1 style="color: #2563EB; font-size: 32px; margin-bottom: 0;">🛡️ Sentinel</h1>
-            <p style="color: #64748B; font-size: 13px; margin-top: 0; font-weight: bold;">ENTERPRISE DIAGNOSTICS</p>
-        </div>
-    """, unsafe_allow_html=True)
+    st.title("🛡️ Forensic Sentinel")
 
-    with st.expander("🔑 Server Login & Sync Maps", expanded=False):
+    with st.expander("🔑 Server Login & Map Gen", expanded=True):
         ssh_ip   = st.text_input("Server IP", placeholder="192.168.x.x", key="ssh_ip")
         ssh_user = st.text_input("Username", key="ssh_user_input")
         ssh_pwd  = st.text_input("Password", type="password", key="ssh_pwd")
@@ -1186,37 +1190,25 @@ with st.sidebar:
                     out, err = generate_remote_source_maps(ssh_ip, ssh_user, ssh_pwd, manual_path, force_build=force_build)
                     if out:
                         st.toast("Maps Synced Successfully!", icon="✅")
+                        st.success("Maps Synced!")
                         st.session_state.js_map_cache = {}
                         with st.expander("Details"): st.text(out)
                     else: st.error(f"Execution Error: {err}")
             else: st.warning("Provide IP, User, Password, and Path.")
-            
-    st.markdown("<hr/>", unsafe_allow_html=True)
+
+    st.divider()
     
-    st.markdown("<div class='sidebar-header'>🎯 1. Operation Mode</div>", unsafe_allow_html=True)
-    app_modes = {
-        "Standard Analysis": "📊 Standard Mode",
-        "JSON Analysis": "⚙️ JSON Config Mode",
-        "Recursive Analysis": "📂 Deep Recursive Mode"
-    }
-    app_mode = st.radio("Operating Mode", list(app_modes.keys()), format_func=lambda x: app_modes[x], label_visibility="collapsed")
+    app_mode = st.radio("Operating Mode", ["Standard Analysis", "JSON Analysis", "Recursive Analysis"])
     
-    st.markdown("<hr/>", unsafe_allow_html=True)
-    
-    st.markdown("<div class='sidebar-header'>⚡ 2. Processing Engine</div>", unsafe_allow_html=True)
-    engines = {
-        "Local Memory (Small Files)": "💻 Local Memory (Standard)",
-        "FastAPI (Large file)": "🚀 FastAPI (Massive Files)"
-    }
-    processing_engine = st.radio("Engine Select", list(engines.keys()), format_func=lambda x: engines[x], label_visibility="collapsed")
+    st.divider()
+    st.markdown("### ⚙️ Processing Engine")
+    processing_engine = st.radio("Engine Select", ["Local Memory (Small Files)", "FastAPI (Large file)"])
     st.session_state.processing_engine = processing_engine
     
     if processing_engine == "FastAPI (Large file)":
-        fastapi_url = st.text_input("FastAPI URL", "http://localhost:8000")
+        fastapi_url = st.text_input("FastAPI Server URL", "http://localhost:8000")
         st.session_state.fastapi_url = fastapi_url
-
-    st.markdown("<hr/>", unsafe_allow_html=True)
-    st.markdown("<div class='sidebar-header'>📥 3. Data Input</div>", unsafe_allow_html=True)
+    st.divider()
 
     # --- UI ROUTING DEPENDING ON MODE ---
     if app_mode == "Standard Analysis":
@@ -1229,17 +1221,17 @@ with st.sidebar:
             st.session_state.fastapi_target_file = None
             
         if st.session_state.get("memory_files"):
-            if st.button("Process Multiple Uploads", use_container_width=True): pass
+            if st.button("Process Multiple Uploads"): pass
 
     elif app_mode == "JSON Analysis":
-        schema_source = st.radio("Schema", ["Folder", "Upload"], horizontal=True)
+        schema_source = st.radio("Schema Source", ["Folder", "Upload"], horizontal=True)
         if schema_source == "Folder":
             jfiles = [f for f in os.listdir(SCHEMA_DIR) if f.endswith(".json")] if os.path.exists(SCHEMA_DIR) else []
-            sel = st.selectbox("Select Schema", ["-- Choose --"] + sorted(jfiles))
-            if sel != "-- Choose --":
+            sel = st.selectbox("Select schema", ["choose"] + sorted(jfiles))
+            if sel != "choose":
                 with open(os.path.join(SCHEMA_DIR, sel)) as f: st.session_state.json_config = json.load(f)
         else:
-            up_schema = st.file_uploader("Upload Schema", type=["json"], label_visibility="collapsed")
+            up_schema = st.file_uploader("Upload Schema JSON", type=["json"])
             if up_schema: st.session_state.json_config = json.load(up_schema)
 
         jc, jn, f_path, _ = file_browser_ui("json", is_recursive=False)
@@ -1251,16 +1243,16 @@ with st.sidebar:
             st.session_state.fastapi_target_file = None
 
     elif app_mode == "Recursive Analysis":
-        use_json_rec = st.checkbox("Enable JSON Rules?")
+        use_json_rec = st.checkbox("Enable JSON Configuration?")
         if use_json_rec:
-            schema_source = st.radio("Schema", ["Folder", "Upload"], horizontal=True, key="rec_ss")
+            schema_source = st.radio("Schema Source", ["Folder", "Upload"], horizontal=True, key="rec_ss")
             if schema_source == "Folder":
                 jfiles = [f for f in os.listdir(SCHEMA_DIR) if f.endswith(".json")] if os.path.exists(SCHEMA_DIR) else []
-                sel = st.selectbox("Select Schema", ["-- Choose --"] + sorted(jfiles), key="rec_s")
-                if sel != "-- Choose --":
+                sel = st.selectbox("Select schema", ["choose"] + sorted(jfiles), key="rec_s")
+                if sel != "choose":
                     with open(os.path.join(SCHEMA_DIR, sel)) as f: st.session_state.json_config = json.load(f)
             else:
-                up_schema = st.file_uploader("Upload Schema", type=["json"], key="rec_up", label_visibility="collapsed")
+                up_schema = st.file_uploader("Upload Schema JSON", type=["json"], key="rec_up")
                 if up_schema: st.session_state.json_config = json.load(up_schema)
         else:
             st.session_state.json_config = None
@@ -1268,9 +1260,7 @@ with st.sidebar:
         _, _, _, folder_target = file_browser_ui("rec", is_recursive=True)
         if folder_target:
             st.session_state.recursive_folder_target = folder_target
-        
-        st.write("") 
-        if st.button("🚀 Start Deep Scan", use_container_width=True, type="primary"):
+        if st.button("Start Deep Recursive Scan", use_container_width=True, type="primary"):
             st.session_state.recursive_folder_requested = True
 
 # --- MAIN EXECUTION ---
@@ -1285,7 +1275,7 @@ if app_mode == "Recursive Analysis" and st.session_state.get("recursive_folder_r
     render_analysis(incs, stats, lines, ver, window_layers)
 
 elif st.session_state.processing_engine == "FastAPI (Large file)":
-    st.header(f"🚀 FastAPI Massive Processor")
+    st.header(f"🚀 FastAPI Large File Processor ({app_mode})")
     
     if st.session_state.get("fastapi_target_file"):
         file_path = st.session_state.fastapi_target_file
@@ -1297,12 +1287,14 @@ elif st.session_state.processing_engine == "FastAPI (Large file)":
                     config_to_send = st.session_state.json_config if app_mode == "JSON Analysis" else None
                     payload = {"file_path": file_path, "rpc_delay_threshold": float(st.session_state.rpc_delay_threshold), "config": config_to_send}
                     
-                    st.toast("⚡ Delegating massive chunks to FastAPI...", icon="🚀")
+                    # Pop-up for visibility
+                    st.toast("⚡ Splitting massive file into parallel chunks for sub-minute processing...", icon="🚀")
                     
                     response = requests.post(f"{fastapi_url}/analyze_large_file", json=payload)
                     if response.status_code == 200:
                         data = response.json()
                         st.toast("✅ Analysis Complete!", icon="🎉")
+                        st.success("✅ Analysis Complete!")
                         st.session_state.active_incidents = data["incs"]
                         st.session_state.fastapi_stats = data["stats"]
                         st.session_state.fastapi_version = data["version"]
@@ -1334,6 +1326,8 @@ elif st.session_state.processing_engine == "FastAPI (Large file)":
             st.session_state.active_incidents, st.session_state.fastapi_stats, sparse_lines, 
             st.session_state.fastapi_version, st.session_state.fastapi_window_layers
         )
+    elif not st.session_state.get("fastapi_target_file"):
+        st.info("Please browse and select a log file from the sidebar.")
 
 else:
     # --- LOCAL MEMORY EXECUTION ---
